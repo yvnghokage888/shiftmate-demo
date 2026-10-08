@@ -1,0 +1,45 @@
+# ShiftMate
+
+A staff rostering and time-tracking web app for a small moving company, built by one developer (me). The production version schedules a crew of 20+ across a truck fleet and replaced a paid SaaS product.
+
+**This repository is a public demo copy.** It has no git history from the original, all business and staff data has been removed, and the seed data is invented ("Demo Removals Co").
+
+## What it does
+
+- **Roster grid.** Drag-and-drop shift moves and swaps, rectangular multi-cell selection, keyboard copy, cut and paste, a 20-deep undo stack, and warnings for conflicts and availability.
+- **Timesheets.** Rostered versus actual hours, with payroll CSV export.
+- **Kiosk.** A PIN-based clock-in screen for a shared tablet that is **not signed in**.
+- **Fleet.** Trucks, service and fuel logs, WOF and rego expiry.
+- **Team and privileges.** Staff, teams (tags) and a grant matrix controlling who can read or write each area.
+- **Realtime.** Changes appear on every open device.
+
+## The part I'm proudest of: the kiosk
+
+A shared tablet has to let anyone record their time without giving that tablet access to the database. The app solves it in Postgres, not in the browser:
+
+- The tablet uses the public anon key. Its row-level security policy and **column-level grants** let it read only `id`, `name`, `active`, `is_manager` and `has_pin` for non-manager staff. No emails, no phone numbers, no PIN hashes.
+- All writes go through `SECURITY DEFINER` functions (`kiosk_clock`, `kiosk_set_break`) that check the staff member's PIN with bcrypt, then act on that one person only.
+- `kiosk_clock` enforces the rules on the server: clock-in needs a published shift and opens 15 minutes before the rostered start.
+- Provisioning a tablet needs a setup code, checked against a hash in a table the browser cannot read.
+
+See `supabase/schema.sql`: the policies, grants and functions are all in one file and commented.
+
+## Stack
+
+React 19, TypeScript, Vite, Tailwind, shadcn/ui, TanStack Query, Supabase (Postgres, Auth, Realtime, row-level security).
+
+## Run it
+
+You need your own Supabase project (the free tier is fine).
+
+1. Run `supabase/schema.sql`, then `supabase/seed.sql`, in the Supabase SQL editor.
+2. `copy .env.example .env.local` and add your project URL and **anon** key.
+3. `npm install`, then `npm run dev`.
+4. Create a login for the demo manager (see the header of `scripts/make-demo-login.mjs` for the environment variables), then sign in with `manager@example.com`.
+5. To try the kiosk, open `/?kiosk-setup=demo-kiosk` and use a demo PIN from the top of `seed.sql`.
+
+## Honest notes
+
+- `schema.sql` is a reconstruction for this demo, written from what the app queries. The production database is not included.
+- Creating and resetting staff logins from inside the app is **disabled in the demo**. In production that uses privileged functions I have not published, so those functions return a message instead. Use `make-demo-login.mjs`.
+- The kiosk has no brute-force lockout in this demo (a 4-digit PIN can be guessed by repeated calls). A real deployment should rate-limit `kiosk_clock` per device and per staff member.
