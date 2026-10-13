@@ -32,11 +32,11 @@ React 19, TypeScript, Vite, Tailwind, shadcn/ui, TanStack Query, Supabase (Postg
 
 You need your own Supabase project (the free tier is fine).
 
-1. Run `supabase/schema.sql`, then `supabase/seed.sql`, in the Supabase SQL editor.
+1. Run `supabase/schema.sql`, then `supabase/seed.sql`, then (optionally, for a fuller demo) `supabase/seed-more.sql`, in the Supabase SQL editor. The last one adds 14 more crew, 7 trucks in total, and about six weeks of rostered shifts and clock logs.
 2. `copy .env.example .env.local` and add your project URL and **anon** key.
 3. `npm install`, then `npm run dev`.
 4. Create a login for the demo manager (see the header of `scripts/make-demo-login.mjs` for the environment variables), then sign in with `manager@example.com`.
-5. To try the kiosk, open `/?kiosk-setup=demo-kiosk` and use a demo PIN from the top of `seed.sql`.
+5. To try the kiosk, open `/?kiosk-setup=demo-kiosk` and use a demo PIN from the top of `seed.sql` or `seed-more.sql`.
 
 ## Honest notes
 
