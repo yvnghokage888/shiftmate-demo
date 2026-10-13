@@ -35,7 +35,7 @@ create table public.shifts (
   date           date not null,
   start_time     time,
   duration_hours numeric,
-  shift_type     text not null default 'job',
+  shift_type     text not null default 'shift',
   notes          text,
   published      boolean not null default false
 );

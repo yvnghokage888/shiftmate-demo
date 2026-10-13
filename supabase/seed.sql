@@ -67,7 +67,7 @@ jobs as (
   ) as j(slot, job_name, start_time, hours, notes)
 )
 insert into public.shifts (staff_id, job_name, date, start_time, duration_hours, shift_type, notes, published)
-select c.id, j.job_name, d.day, j.start_time, j.hours, 'job', j.notes,
+select c.id, j.job_name, d.day, j.start_time, j.hours, 'shift', j.notes,
        d.day <= date_trunc('week', current_date)::date + 7
 from days d
 join crew c on ((d.k + c.n) % 3) <> 0

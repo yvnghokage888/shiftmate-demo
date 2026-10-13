@@ -98,7 +98,7 @@ planned as (
      or d.day >= date_trunc('week', current_date)::date + 14
 )
 insert into public.shifts (staff_id, job_name, date, start_time, duration_hours, shift_type, notes, published)
-select staff_id, job_name, day, start_time, hours, 'job', notes,
+select staff_id, job_name, day, start_time, hours, 'shift', notes,
        day <= date_trunc('week', current_date)::date + 7
 from planned;
 

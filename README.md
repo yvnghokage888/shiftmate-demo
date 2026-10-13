@@ -39,6 +39,7 @@ You need your own Supabase project (the free tier is fine).
 
 1. Run `supabase/schema.sql`, then `supabase/seed.sql`, then (optionally, for a fuller demo) `supabase/seed-more.sql`, in the Supabase SQL editor. The last one adds 14 more crew, 7 trucks in total, and about six weeks of rostered shifts and clock logs.
    For the Dispatch, Cleaning and Invoices screens also run `supabase/crm-demo.sql`, then `supabase/crm-demo-seed.sql` (44 fictional jobs and their invoices).
+   Finally run `supabase/linked-demo-data.sql`. It replaces the generated jobs, shifts, clock logs, invoices and notifications with one consistent set: about 380 jobs over six weeks, each with a truck and crew who are rostered on that day (job to roster shift link), plus leave, clock logs, invoices and an Unassigned pile. Nobody is double-booked, on leave or over 9 hours. Re-run it any time to refresh the dates around today.
 2. `copy .env.example .env.local` and add your project URL and **anon** key.
 3. `npm install`, then `npm run dev`.
 4. Create a login for the demo manager (see the header of `scripts/make-demo-login.mjs` for the environment variables), then sign in with `manager@example.com`.
