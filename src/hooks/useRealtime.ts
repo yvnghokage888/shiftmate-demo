@@ -12,7 +12,9 @@ type Table =
   | "truck_logs"
   | "staff"
   | "notifications"
-  | "access_grants";
+  | "access_grants"
+  | "jobs"
+  | "invoices";
 
 // Map a changed table to the query keys that should refetch.
 function invalidateFor(table: Table) {
@@ -33,6 +35,10 @@ function invalidateFor(table: Table) {
       return queryClient.invalidateQueries({ queryKey: ["notifications"] });
     case "access_grants":
       return queryClient.invalidateQueries({ queryKey: qk.grants() });
+    case "jobs":
+      return queryClient.invalidateQueries({ queryKey: qk.jobs() });
+    case "invoices":
+      return queryClient.invalidateQueries({ queryKey: qk.invoices() });
   }
 }
 
@@ -61,6 +67,8 @@ export function useRealtime(enabled = true) {
       "staff",
       "notifications",
       "access_grants",
+      "jobs",
+      "invoices",
     ];
     const channel = supabase.channel("app-rt");
     for (const t of tables) {

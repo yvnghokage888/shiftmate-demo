@@ -27,5 +27,7 @@ export const qk = {
   recurBlocks: () => ["recur_blocks"] as const,
   notifications: (staffId: string | null) => ["notifications", staffId] as const,
   grants: () => ["access_grants"] as const,
+  jobs: () => ["jobs"] as const,
+  invoices: () => ["invoices"] as const,
   hrNote: (staffId: string | null) => ["hr_note", staffId] as const,
 };

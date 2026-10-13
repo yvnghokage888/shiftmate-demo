@@ -33,6 +33,9 @@ import { Fleet } from "@/components/Fleet";
 import { Privileges } from "@/components/Privileges";
 import { Roster } from "@/components/Roster";
 import { Dashboard } from "@/components/Dashboard";
+import { Dispatch } from "@/components/Dispatch";
+import { Cleaning } from "@/components/Cleaning";
+import { Invoices } from "@/components/Invoices";
 
 export interface NavItem {
   path: string;
@@ -46,7 +49,7 @@ export interface NavItem {
   always?: boolean;
 }
 
-const RESOURCES: ResourceKey[] = ["roster", "timesheets", "team", "fleet", "hr"];
+const RESOURCES: ResourceKey[] = ["roster", "timesheets", "team", "fleet", "hr", "dispatch", "cleaning", "invoicing"];
 
 /** Overview: proves auth → React Query → RLS data fetch end to end. */
 function Overview() {
@@ -149,6 +152,9 @@ export const NAV: NavItem[] = [
   { path: "/timesheets", label: "Timesheets", element: <Timesheets />, resource: "timesheets" },
   { path: "/staff", label: "Staff", element: <Staff />, resource: "team" },
   { path: "/fleet", label: "Fleet", element: <Fleet />, resource: "fleet" },
+  { path: "/dispatch", label: "Dispatch", element: <Dispatch />, resource: "dispatch" },
+  { path: "/cleaning", label: "Cleaning", element: <Cleaning />, resource: "cleaning" },
+  { path: "/invoices", label: "Invoices", element: <Invoices />, resource: "invoicing" },
   { path: "/dashboard", label: "Dashboard", element: <Dashboard />, managerOnly: true },
   { path: "/privileges", label: "Privileges", element: <Privileges />, managerOnly: true },
   { path: "/settings", label: "Settings", element: <Settings />, always: true },

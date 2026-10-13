@@ -18,6 +18,9 @@ const PRIV_RES: [string, string, string][] = [
   ["team", "Team", "Staff profiles and contact details"],
   ["fleet", "Fleet", "Vehicle allocation and maintenance logs"],
   ["hr", "HR", "Compliance documents and performance"],
+  ["dispatch", "Dispatch", "Scheduled jobs: assign trucks and crew"],
+  ["cleaning", "Cleaning", "Cleaning bookings and cleaner assignment"],
+  ["invoicing", "Invoices", "Invoices, GST and payment status"],
 ];
 const RES_KEYS = PRIV_RES.map(([k]) => k);
 

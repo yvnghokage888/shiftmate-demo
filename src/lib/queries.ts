@@ -9,6 +9,8 @@ import type {
   ClockLog,
   Grant,
   HrNote,
+  Invoice,
+  Job,
   NotificationRow,
   Perms,
   PermissionRow,
@@ -371,6 +373,55 @@ export function useHrNote(staffId: string | null, enabled: boolean) {
         .maybeSingle();
       if (error) return null;
       return (data as HrNote) ?? null;
+    },
+  });
+}
+
+/* ------------------------------------------------------------- jobs + invoices */
+
+const JOB_COLS =
+  "id,customer_name,customer_phone,service_type,job_date,start_time,est_hours,pickup_address,dropoff_address,bedrooms,bathrooms,cleaning_type,truck_id,crew_ids,status,quote_amount,notes";
+
+/** All jobs the viewer may see. RLS limits cleaning vs moves by the matching permission. */
+export function useJobs() {
+  const uid = useUid();
+  return useQuery({
+    queryKey: qk.jobs(),
+    enabled: !!uid,
+    queryFn: async (): Promise<Job[]> => {
+      const { data, error } = await supabase
+        .from("jobs")
+        .select(JOB_COLS)
+        .order("job_date")
+        .order("start_time");
+      if (error) throw error;
+      return (data ?? []).map((j) => ({
+        ...j,
+        est_hours: j.est_hours == null ? null : Number(j.est_hours),
+        quote_amount: j.quote_amount == null ? null : Number(j.quote_amount),
+      })) as Job[];
+    },
+  });
+}
+
+export function useInvoices() {
+  const uid = useUid();
+  return useQuery({
+    queryKey: qk.invoices(),
+    enabled: !!uid,
+    queryFn: async (): Promise<Invoice[]> => {
+      const { data, error } = await supabase
+        .from("invoices")
+        .select("id,job_id,number,issued_on,due_on,subtotal,gst,total,status,paid_on,jobs(customer_name,service_type,job_date)")
+        .order("issued_on", { ascending: false })
+        .order("number", { ascending: false });
+      if (error) throw error;
+      return (data ?? []).map((i) => ({
+        ...i,
+        subtotal: Number(i.subtotal),
+        gst: Number(i.gst),
+        total: Number(i.total),
+      })) as unknown as Invoice[];
     },
   });
 }

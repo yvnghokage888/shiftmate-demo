@@ -105,6 +105,10 @@ export type ResourceKey =
   | "team"
   | "fleet"
   | "hr"
+  // Demo CRM-style screens
+  | "dispatch"
+  | "cleaning"
+  | "invoicing"
   // CRM resources (CRM-0). crm_leads is folded into crm_deals.
   | "crm_deals"
   | "crm_jobs"
@@ -118,4 +122,45 @@ export interface PermissionRow {
   resource: string;
   can_read: boolean;
   can_write: boolean;
+}
+
+export type ServiceType = "house_move" | "piano" | "commercial" | "cleaning";
+export type JobStatus = "quoted" | "scheduled" | "in_progress" | "completed" | "cancelled";
+export type CleaningType = "end_of_tenancy" | "regular" | "deep";
+
+export interface Job {
+  id: string;
+  customer_name: string;
+  customer_phone: string | null;
+  service_type: ServiceType;
+  job_date: string; // YYYY-MM-DD
+  start_time: string | null;
+  est_hours: number | null;
+  pickup_address: string | null;
+  dropoff_address: string | null;
+  bedrooms: number | null;
+  bathrooms: number | null;
+  cleaning_type: CleaningType | null;
+  truck_id: string | null;
+  crew_ids: string[];
+  status: JobStatus;
+  quote_amount: number | null;
+  notes: string | null;
+}
+
+export type InvoiceStatus = "draft" | "sent" | "paid";
+
+export interface Invoice {
+  id: string;
+  job_id: string;
+  number: string;
+  issued_on: string;
+  due_on: string;
+  subtotal: number;
+  gst: number;
+  total: number;
+  status: InvoiceStatus;
+  paid_on: string | null;
+  // Embedded via the job_id foreign key. Null when the viewer has no access to that job.
+  jobs: { customer_name: string; service_type: ServiceType; job_date: string } | null;
 }
