@@ -2,6 +2,8 @@
 
 A staff rostering and time-tracking web app for a small moving company, built by one developer (me). The production version schedules a crew of 20+ across a truck fleet and replaced a paid SaaS product.
 
+**Live demo:** https://shiftmate-demo.vercel.app (sign-in required; the kiosk is at `/?kiosk-setup=demo-kiosk`).
+
 **This repository is a public demo copy.** It has no git history from the original, all business and staff data has been removed, and the seed data is invented ("Demo Removals Co").
 
 ## What it does
