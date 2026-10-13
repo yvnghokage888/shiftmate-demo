@@ -1,13 +1,31 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/geist-mono";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
     --font-heading: var(--font-sans);
-    --font-sans: 'Geist Variable', sans-serif;
+    --font-sans: 'Inter Variable', 'Inter', 'Segoe UI', system-ui, sans-serif;
+    --font-mono: 'Geist Mono Variable', ui-monospace, 'Cascadia Code', Consolas, monospace;
+
+    /* Semantic palette exposed as utilities (text-brand, bg-yellow, text-good, ...). */
+    --color-brand: var(--brand);
+    --color-brand-2: var(--brand-2);
+    --color-brand-ink: var(--brand-ink);
+    --color-yellow: var(--yellow);
+    --color-good: var(--good);
+    --color-warn: var(--warn);
+    --color-bad: var(--bad);
+    --color-good-bg: var(--good-bg);
+    --color-warn-bg: var(--warn-bg);
+    --color-bad-bg: var(--bad-bg);
+    --color-sidebar-muted: var(--sidebar-muted);
+    --color-sidebar-label: var(--sidebar-label);
+    --color-sidebar-role: var(--sidebar-role);
+
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -37,6 +55,13 @@
     --color-popover: var(--popover);
     --color-card-foreground: var(--card-foreground);
     --color-card: var(--card);
+    --color-job-card-foreground: var(--job-card-foreground);
+    --color-job-card: var(--job-card);
+    --color-job-card-border: var(--job-card-border);
+    --color-board: var(--board);
+    --color-board-header: var(--board-header);
+    --color-board-foreground: var(--board-foreground);
+    --color-board-border: var(--board-border);
     --color-foreground: var(--foreground);
     --color-background: var(--background);
     --radius-sm: calc(var(--radius) * 0.6);
@@ -46,113 +71,200 @@
     --radius-2xl: calc(var(--radius) * 1.8);
     --radius-3xl: calc(var(--radius) * 2.2);
     --radius-4xl: calc(var(--radius) * 2.6);
+    --shadow-card: var(--shadow);
 }
 
+/* ── Light theme: lilac canvas, purple accent, purple sidebar rail ── */
 :root {
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
+    --background: #f3eff7;
+    --foreground: #1f1a26;
+    --card: #faf7fc;
+    --card-foreground: #1f1a26;
+    --job-card: #fbf9fd;
+    --job-card-foreground: #1f1a26;
+    --job-card-border: #dccbe6;
+    --popover: #faf7fc;
+    --popover-foreground: #1f1a26;
+    --primary: #9739b0;
+    --primary-foreground: #ffffff;
+    --secondary: #ece3f3;
+    --secondary-foreground: #1f1a26;
+    --muted: #ece3f3;
+    --muted-foreground: #6b5a78;
+    --accent: #efe5f6;
+    --accent-foreground: #1f1a26;
+    --destructive: #c26a5e;
+    --border: #e1d5ea;
+    --input: #cdbad9;
+    --ring: #9739b0;
+    --chart-1: #9739b0;
+    --chart-2: #be76ef;
+    --chart-3: #7396c9;
+    --chart-4: #5f9e78;
+    --chart-5: #d8a45f;
     --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.708 0 0);
+
+    --brand: #9739b0;
+    --brand-2: #be76ef;
+    --brand-ink: #5c1f6f;
+    --yellow: #f3d02a;
+    --good: #5f9e78;
+    --warn: #b8894a;
+    --bad: #c26a5e;
+    --good-bg: #e3efe7;
+    --warn-bg: #f3ebdc;
+    --bad-bg: #f4e4e1;
+    --shadow: 0 1px 2px rgba(31, 26, 38, .04), 0 2px 8px -6px rgba(31, 26, 38, .08);
+
+    /* Dispatch board surfaces */
+    --board: #e3e0ec;
+    --board-header: #dbd7e6;
+    --board-foreground: #1f1a26;
+    --board-border: #cfc9dd;
+    --board-muted: #6e6879;
+    --board-accent: #dcd7e7;
+
+    --sidebar: #9739b0;
+    --sidebar-foreground: #ffffff;
+    --sidebar-primary: #f3d02a;
+    --sidebar-primary-foreground: #2a0f33;
+    --sidebar-accent: #7f2b96;
+    --sidebar-accent-foreground: #ffffff;
+    --sidebar-border: #ab5cc2;
+    --sidebar-ring: #f3d02a;
+    --sidebar-muted: #ead9f1;
+    --sidebar-label: #f3d02a;
+    --sidebar-role: #f3d02a;
 }
 
+/* ── Dark theme: calm violet accent, darker sidebar rail than the content ── */
 .dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.205 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.922 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.556 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.556 0 0);
+    --background: #1e1f27;
+    --foreground: #e6e7ea;
+    --card: #191a20;
+    --card-foreground: #e6e7ea;
+    --job-card: #0f1014;
+    --job-card-foreground: #e6e7ea;
+    --job-card-border: #2c2e37;
+    --popover: #191a20;
+    --popover-foreground: #e6e7ea;
+    --primary: #be76ef;
+    --primary-foreground: #1a0a20;
+    --secondary: #23252d;
+    --secondary-foreground: #e6e7ea;
+    --muted: #23252d;
+    --muted-foreground: #9a9ba6;
+    --accent: #20222a;
+    --accent-foreground: #e6e7ea;
+    --destructive: #cf7b6f;
+    --border: #292b34;
+    --input: #343742;
+    --ring: #be76ef;
+    --chart-1: #be76ef;
+    --chart-2: #9739b0;
+    --chart-3: #7fa3cf;
+    --chart-4: #6aab84;
+    --chart-5: #d9a877;
+
+    --brand: #be76ef;
+    --brand-2: #d7a6f7;
+    --brand-ink: #9739b0;
+    --yellow: #f3d02a;
+    --good: #6aab84;
+    --warn: #c2955c;
+    --bad: #cf7b6f;
+    --good-bg: #1b3125;
+    --warn-bg: #322818;
+    --bad-bg: #33201d;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .35), 0 6px 20px -10px rgba(0, 0, 0, .45);
+
+    --board: #15161c;
+    --board-header: #1b1d24;
+    --board-foreground: #e6e7ea;
+    --board-border: #2c2e37;
+    --board-muted: #9a9ba6;
+    --board-accent: #23252d;
+
+    --sidebar: #0b0c0f;
+    --sidebar-foreground: #f0f1f3;
+    --sidebar-primary: #f3d02a;
+    --sidebar-primary-foreground: #1a0a20;
+    --sidebar-accent: #191a20;
+    --sidebar-accent-foreground: #ffffff;
+    --sidebar-border: #23252d;
+    --sidebar-ring: #be76ef;
+    --sidebar-muted: #8a8b96;
+    --sidebar-label: #f3d02a;
+    --sidebar-role: #f3d02a;
+}
+
+/* Text and borders inside a board surface follow the board's own theme. */
+.bg-job-card,
+.bg-board,
+.bg-board-header {
+    --foreground: var(--job-card-foreground);
+    --muted-foreground: var(--board-muted);
+    --border: var(--job-card-border);
+    --accent: var(--board-accent);
+    --accent-foreground: var(--job-card-foreground);
+    color: var(--board-foreground);
+}
+
+.brand-wordmark {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    }
+  }
   body {
     @apply bg-background text-foreground;
-    }
+  }
   html {
     @apply font-sans;
-    }
-}
-
-@layer components {
-  /* Shared form-input class for the ported manager screens (plain for now;
-     visual polish is a later pass). */
-  .ipt {
-    @apply rounded-md border bg-background px-2 py-1 text-sm;
-    width: 100%;
+  }
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: clip;
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--border);
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--muted-foreground);
   }
 }
 
-/* ── ShiftMate brand: purple primary over the neutral base ──
-   Mirrors the current app's accent (#9739b0 light / #be76ef dark). Defined
-   after the generated tokens so it overrides primary/ring without touching
-   the rest of the neutral surface scale. */
-:root {
-  --primary: oklch(0.52 0.18 315);
-  --primary-foreground: oklch(0.985 0 0);
-  --ring: oklch(0.52 0.18 315);
-  --sidebar-primary: oklch(0.52 0.18 315);
-  --sidebar-ring: oklch(0.52 0.18 315);
-}
-.dark {
-  --primary: oklch(0.66 0.19 312);
-  --primary-foreground: oklch(0.99 0 0);
-  --ring: oklch(0.66 0.19 312);
-  --sidebar-primary: oklch(0.66 0.19 312);
-  --sidebar-ring: oklch(0.66 0.19 312);
+@layer components {
+  .ipt {
+    @apply rounded-lg border border-input bg-card px-2.5 py-1.5 text-sm;
+    width: 100%;
+  }
+  .ipt:focus-visible {
+    @apply border-ring outline-none ring-3 ring-ring/40;
+  }
+  /* Numbers: monospaced, tabular. */
+  .mono {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
 }

@@ -12,6 +12,7 @@ import { SERVICE_LABEL, STATUS_CLS, STATUS_LABEL, clashFor, fmtDay, money } from
 import { Button } from "@/components/ui/button";
 import { JobModal } from "@/components/JobModal";
 import { DispatchTimeline } from "@/components/DispatchTimeline";
+import { DispatchBoard } from "@/components/DispatchBoard";
 import type { Job, JobStatus } from "@/lib/types";
 
 export function Dispatch() {
@@ -24,7 +25,7 @@ export function Dispatch() {
   const showMoney = canRead("invoicing");
 
   const [offset, setOffset] = useState(0);
-  const [view, setView] = useState<"timeline" | "week">("timeline");
+  const [view, setView] = useState<"board" | "timeline" | "week">("board");
   const [dayOffset, setDayOffset] = useState(0);
   const [modal, setModal] = useState<Job | "new" | null>(null);
 
@@ -40,7 +41,7 @@ export function Dispatch() {
   const staffName = new Map(staff.map((s) => [s.id, s.name]));
   const truckById = new Map(trucks.map((t) => [t.id, t]));
 
-  const scopeDays = view === "timeline" ? [selectedDay] : days;
+  const scopeDays = view !== "week" ? [selectedDay] : days;
   const weekJobs = moves.filter((j) => scopeDays.includes(j.job_date));
   const live = weekJobs.filter((j) => j.status !== "cancelled");
   const noTruck = live.filter((j) => !j.truck_id).length;
@@ -65,17 +66,17 @@ export function Dispatch() {
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex overflow-hidden rounded-md border text-xs">
-            {(["timeline", "week"] as const).map((v) => (
+            {(["board", "timeline", "week"] as const).map((v) => (
               <button
                 key={v}
                 onClick={() => setView(v)}
                 className={`px-3 py-1.5 ${view === v ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
               >
-                {v === "timeline" ? "Timeline" : "Week list"}
+                {v === "board" ? "Board" : v === "timeline" ? "Timeline" : "Week list"}
               </button>
             ))}
           </div>
-          {view === "timeline" ? (
+          {view !== "week" ? (
             <>
               <Button variant="outline" size="sm" onClick={() => setDayOffset((o) => o - 1)}>
                 ‹
@@ -110,13 +111,23 @@ export function Dispatch() {
       </div>
 
       <div className="grid grid-cols-3 gap-3">
-        <Stat label={view === "timeline" ? "Jobs on this day" : "Jobs this week"} value={live.length} />
+        <Stat label={view !== "week" ? "Jobs on this day" : "Jobs this week"} value={live.length} />
         <Stat label="No truck assigned" value={noTruck} warn={noTruck > 0} />
         <Stat label="Double-bookings" value={clashCount} warn={clashCount > 0} />
       </div>
 
       {isLoading ? (
         <p className="py-12 text-center text-sm text-muted-foreground">Loading jobs…</p>
+      ) : view === "board" ? (
+        <DispatchBoard
+          date={selectedDay}
+          jobs={moves.filter((j) => j.job_date === selectedDay && j.status !== "cancelled")}
+          trucks={trucks}
+          staffName={staffName}
+          writable={canEdit}
+          showMoney={showMoney}
+          onOpen={(j) => (canEdit ? setModal(j) : undefined)}
+        />
       ) : view === "timeline" ? (
         <DispatchTimeline
           date={selectedDay}

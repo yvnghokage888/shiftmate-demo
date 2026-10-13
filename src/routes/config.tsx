@@ -37,8 +37,20 @@ import { Dispatch } from "@/components/Dispatch";
 import { Cleaning } from "@/components/Cleaning";
 import { Invoices } from "@/components/Invoices";
 
+export type SectionKey = "general" | "roster" | "crm";
+
+export const SECTIONS: { key: SectionKey; label: string }[] = [
+  { key: "general", label: "General" },
+  { key: "roster", label: "Roster" },
+  { key: "crm", label: "CRM" },
+];
+
 export interface NavItem {
   path: string;
+  /** Sidebar group. */
+  section: SectionKey;
+  /** Full-width page (boards and timelines) instead of the narrow column. */
+  wide?: boolean;
   label: string;
   element: ReactElement;
   /** Permission resource gating visibility (managers bypass via canRead). */
@@ -145,17 +157,17 @@ function Stat({ label, n, loading }: { label: string; n: number; loading: boolea
 }
 
 export const NAV: NavItem[] = [
-  { path: "/", label: "Overview", element: <Overview />, always: true },
-  { path: "/me", label: "My Shifts", element: <EmployeePortal />, always: true },
-  { path: "/my-roster", label: "My Roster", element: <CrewRoster />, always: true },
-  { path: "/roster", label: "Roster", element: <Roster />, resource: "roster" },
-  { path: "/timesheets", label: "Timesheets", element: <Timesheets />, resource: "timesheets" },
-  { path: "/staff", label: "Staff", element: <Staff />, resource: "team" },
-  { path: "/fleet", label: "Fleet", element: <Fleet />, resource: "fleet" },
-  { path: "/dispatch", label: "Dispatch", element: <Dispatch />, resource: "dispatch" },
-  { path: "/cleaning", label: "Cleaning", element: <Cleaning />, resource: "cleaning" },
-  { path: "/invoices", label: "Invoices", element: <Invoices />, resource: "invoicing" },
-  { path: "/dashboard", label: "Dashboard", element: <Dashboard />, managerOnly: true },
-  { path: "/privileges", label: "Privileges", element: <Privileges />, managerOnly: true },
-  { path: "/settings", label: "Settings", element: <Settings />, always: true },
+  { path: "/", section: "general", label: "Overview", element: <Overview />, always: true },
+  { path: "/me", section: "general", label: "My Shifts", element: <EmployeePortal />, always: true },
+  { path: "/my-roster", section: "general", label: "My Roster", element: <CrewRoster />, always: true },
+  { path: "/roster", section: "roster", wide: true, label: "Roster", element: <Roster />, resource: "roster" },
+  { path: "/timesheets", section: "roster", label: "Timesheets", element: <Timesheets />, resource: "timesheets" },
+  { path: "/staff", section: "roster", label: "Staff", element: <Staff />, resource: "team" },
+  { path: "/fleet", section: "roster", label: "Fleet", element: <Fleet />, resource: "fleet" },
+  { path: "/dispatch", section: "crm", wide: true, label: "Dispatch", element: <Dispatch />, resource: "dispatch" },
+  { path: "/cleaning", section: "crm", label: "Cleaning", element: <Cleaning />, resource: "cleaning" },
+  { path: "/invoices", section: "crm", label: "Invoices", element: <Invoices />, resource: "invoicing" },
+  { path: "/dashboard", section: "general", label: "Dashboard", element: <Dashboard />, managerOnly: true },
+  { path: "/privileges", section: "general", label: "Privileges", element: <Privileges />, managerOnly: true },
+  { path: "/settings", section: "general", label: "Settings", element: <Settings />, always: true },
 ];

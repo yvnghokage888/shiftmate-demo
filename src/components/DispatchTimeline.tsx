@@ -6,11 +6,9 @@
 // A bar's right edge is dashed while the finish is an estimate (quoted hours, or
 // a default for the service type) and solid once the job is completed.
 import { useState } from "react";
-import { toast } from "sonner";
-import { useSetJobTruck } from "@/lib/mutations";
+import { useAssignTruck } from "@/lib/useAssignTruck";
 import { clashFor, SERVICE_LABEL } from "@/lib/jobsUi";
 import { fmtTimeShort, nzNowHM, nzToday } from "@/lib/dates";
-import { friendlyError } from "@/lib/format";
 import type { Job, Truck } from "@/lib/types";
 
 const START_H = 6;
@@ -70,7 +68,7 @@ export function DispatchTimeline({
   writable: boolean;
   onOpen: (job: Job) => void;
 }) {
-  const setTruck = useSetJobTruck();
+  const assign = useAssignTruck(trucks, jobs);
   const [dragId, setDragId] = useState<string | null>(null);
   const [overLane, setOverLane] = useState<string | null>(null);
 
@@ -84,27 +82,7 @@ export function DispatchTimeline({
     setDragId(null);
     setOverLane(null);
     const job = id ? byId.get(id) : undefined;
-    if (!job || job.truck_id === truckId) return;
-    const target = truckId ? trucks.find((t) => t.id === truckId) : null;
-    if (target?.status === "service") {
-      toast(`${target.name} is in for service`);
-      return;
-    }
-    if (truckId) {
-      const moved = { ...job, truck_id: truckId };
-      const others = jobs.filter((j) => j.id !== job.id && j.truck_id === truckId);
-      if (clashFor(moved, [moved, ...others]).truck) {
-        const ok = window.confirm(`${target?.name} is already booked at that time. Assign it anyway?`);
-        if (!ok) return;
-      }
-    }
-    setTruck.mutate(
-      { id: job.id, truckId },
-      {
-        onSuccess: () => toast(truckId ? `${job.customer_name} assigned to ${target?.name}` : "Moved back to unassigned"),
-        onError: (e) => toast(friendlyError(e)),
-      },
-    );
+    if (job) assign(job, truckId);
   }
 
   // A plain render function (not a component): a component declared inside render
