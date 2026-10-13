@@ -619,3 +619,13 @@ export function useDeleteInvoice() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: qk.invoices() }),
   });
 }
+
+export function useSetJobTruck() {
+  return useMutation({
+    mutationFn: async (v: { id: string; truckId: string | null }) => {
+      const { error } = await supabase.from("jobs").update({ truck_id: v.truckId }).eq("id", v.id);
+      if (error) throw error;
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: qk.jobs() }),
+  });
+}

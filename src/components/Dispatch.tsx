@@ -11,6 +11,7 @@ import { friendlyError } from "@/lib/format";
 import { SERVICE_LABEL, STATUS_CLS, STATUS_LABEL, clashFor, fmtDay, money } from "@/lib/jobsUi";
 import { Button } from "@/components/ui/button";
 import { JobModal } from "@/components/JobModal";
+import { DispatchTimeline } from "@/components/DispatchTimeline";
 import type { Job, JobStatus } from "@/lib/types";
 
 export function Dispatch() {
@@ -23,16 +24,24 @@ export function Dispatch() {
   const showMoney = canRead("invoicing");
 
   const [offset, setOffset] = useState(0);
+  const [view, setView] = useState<"timeline" | "week">("timeline");
+  const [dayOffset, setDayOffset] = useState(0);
   const [modal, setModal] = useState<Job | "new" | null>(null);
 
   const moves = jobs.filter((j) => j.service_type !== "cleaning");
   const dates = gwk(offset);
   const days = dates.map((d) => ds(d));
   const today = nzToday();
+  const selectedDay = (() => {
+    const d = new Date(today + "T12:00");
+    d.setDate(d.getDate() + dayOffset);
+    return d.toISOString().slice(0, 10);
+  })();
   const staffName = new Map(staff.map((s) => [s.id, s.name]));
   const truckById = new Map(trucks.map((t) => [t.id, t]));
 
-  const weekJobs = moves.filter((j) => days.includes(j.job_date));
+  const scopeDays = view === "timeline" ? [selectedDay] : days;
+  const weekJobs = moves.filter((j) => scopeDays.includes(j.job_date));
   const live = weekJobs.filter((j) => j.status !== "cancelled");
   const noTruck = live.filter((j) => !j.truck_id).length;
   const clashCount = live.filter((j) => {
@@ -54,16 +63,44 @@ export function Dispatch() {
           <h1 className="text-2xl font-bold">Dispatch</h1>
           <p className="text-sm text-muted-foreground">Scheduled jobs, trucks and crew for the week.</p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={() => setOffset((o) => o - 1)}>
-            ‹
-          </Button>
-          <button className="text-sm text-muted-foreground" onClick={() => setOffset(0)}>
-            {offset === 0 ? "This week" : "Selected week"} · {range}
-          </button>
-          <Button variant="outline" size="sm" onClick={() => setOffset((o) => o + 1)}>
-            ›
-          </Button>
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="flex overflow-hidden rounded-md border text-xs">
+            {(["timeline", "week"] as const).map((v) => (
+              <button
+                key={v}
+                onClick={() => setView(v)}
+                className={`px-3 py-1.5 ${view === v ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
+              >
+                {v === "timeline" ? "Timeline" : "Week list"}
+              </button>
+            ))}
+          </div>
+          {view === "timeline" ? (
+            <>
+              <Button variant="outline" size="sm" onClick={() => setDayOffset((o) => o - 1)}>
+                ‹
+              </Button>
+              <button className="text-sm text-muted-foreground" onClick={() => setDayOffset(0)}>
+                {fmtDay(selectedDay)}
+                {selectedDay === today ? " · Today" : ""}
+              </button>
+              <Button variant="outline" size="sm" onClick={() => setDayOffset((o) => o + 1)}>
+                ›
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="outline" size="sm" onClick={() => setOffset((o) => o - 1)}>
+                ‹
+              </Button>
+              <button className="text-sm text-muted-foreground" onClick={() => setOffset(0)}>
+                {offset === 0 ? "This week" : "Selected week"} · {range}
+              </button>
+              <Button variant="outline" size="sm" onClick={() => setOffset((o) => o + 1)}>
+                ›
+              </Button>
+            </>
+          )}
           {canEdit && (
             <Button size="sm" onClick={() => setModal("new")}>
               + New job
@@ -73,13 +110,21 @@ export function Dispatch() {
       </div>
 
       <div className="grid grid-cols-3 gap-3">
-        <Stat label="Jobs this week" value={live.length} />
+        <Stat label={view === "timeline" ? "Jobs on this day" : "Jobs this week"} value={live.length} />
         <Stat label="No truck assigned" value={noTruck} warn={noTruck > 0} />
         <Stat label="Double-bookings" value={clashCount} warn={clashCount > 0} />
       </div>
 
       {isLoading ? (
         <p className="py-12 text-center text-sm text-muted-foreground">Loading jobs…</p>
+      ) : view === "timeline" ? (
+        <DispatchTimeline
+          date={selectedDay}
+          jobs={moves.filter((j) => j.job_date === selectedDay && j.status !== "cancelled")}
+          trucks={trucks}
+          writable={canEdit}
+          onOpen={(j) => (canEdit ? setModal(j) : undefined)}
+        />
       ) : (
         <div className="space-y-5">
           {days.map((day, i) => {
