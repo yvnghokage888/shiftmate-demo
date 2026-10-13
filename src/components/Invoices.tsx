@@ -8,18 +8,13 @@ import { useInvoices, useJobs, usePermissions } from "@/lib/queries";
 import { useCreateInvoice, useDeleteInvoice, useSetInvoiceStatus } from "@/lib/mutations";
 import { nzToday } from "@/lib/dates";
 import { friendlyError } from "@/lib/format";
-import { INVOICE_CLS, SERVICE_LABEL, fmtDay, money } from "@/lib/jobsUi";
+import { INVOICE_CLS, SERVICE_LABEL, addDaysStr, fmtDay, money } from "@/lib/jobsUi";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/Modal";
 import type { Invoice, InvoiceStatus } from "@/lib/types";
 
 type Tab = "all" | "draft" | "sent" | "overdue" | "paid";
 
-function addDays(dateStr: string, n: number): string {
-  const d = new Date(dateStr + "T12:00");
-  d.setDate(d.getDate() + n);
-  return d.toISOString().slice(0, 10);
-}
 
 export function Invoices() {
   const { data: invoices = [], isLoading } = useInvoices();
@@ -32,7 +27,7 @@ export function Invoices() {
   const [creating, setCreating] = useState(false);
 
   const today = nzToday();
-  const cutoff = addDays(today, -30);
+  const cutoff = addDaysStr(today, -30);
   const isOverdue = (i: Invoice) => i.status === "sent" && i.due_on < today;
   const sum = (list: Invoice[]) => list.reduce((a, i) => a + i.total, 0);
 
@@ -214,7 +209,7 @@ function NewInvoiceModal({ onClose }: { onClose: () => void }) {
 
   const [jobId, setJobId] = useState(options[0]?.id || "");
   const [subtotal, setSubtotal] = useState(options[0]?.quote_amount != null ? String(options[0].quote_amount) : "");
-  const [dueOn, setDueOn] = useState(addDays(nzToday(), 14));
+  const [dueOn, setDueOn] = useState(addDaysStr(nzToday(), 14));
 
   function pick(id: string) {
     setJobId(id);

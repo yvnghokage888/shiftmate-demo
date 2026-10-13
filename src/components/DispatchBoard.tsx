@@ -50,7 +50,7 @@ export function DispatchBoard({
       label: t.name,
       sub: [t.type, t.registration].filter(Boolean).join(" · "),
       color: t.color || "#6b7280",
-      offline: t.status === "service",
+      offline: t.status === "maintenance",
     })),
   ];
 
@@ -96,14 +96,14 @@ export function DispatchBoard({
             {col.sub && <span className="truncate text-[10px] font-semibold uppercase tracking-wide opacity-70">{col.sub}</span>}
           </div>
           <span className="shrink-0 self-start text-sm font-semibold opacity-70" style={{ color: col.color }}>
-            {col.offline ? "Service" : list.length}
+            {col.offline ? "Maintenance" : list.length}
           </span>
         </div>
 
         <div className="min-h-[120px] flex-1 space-y-2 overflow-y-auto p-2">
           {list.length === 0 ? (
             <p className="px-1 py-6 text-center text-xs text-muted-foreground">
-              {pinned ? "All assigned" : col.offline ? "In for service" : "Drop a job here"}
+              {pinned ? "All assigned" : col.offline ? "In for maintenance" : "Drop a job here"}
             </p>
           ) : (
             list.map((j) => (

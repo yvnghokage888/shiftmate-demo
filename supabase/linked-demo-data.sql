@@ -93,7 +93,7 @@ begin
   v_name := firsts[1 + abs(hashtext(seq::text || 'f')) % 40] || ' ' || lasts[1 + abs(hashtext(seq::text || 'l')) % 30];
   if p_tidx is not null and not v_cancel and not p_unassigned then
     select id, name into v_tid, v_tname from (
-      select id, name, row_number() over (order by name) rn from public.trucks where status <> 'service') t where rn = p_tidx;
+      select id, name, row_number() over (order by name) rn from public.trucks where status <> 'maintenance') t where rn = p_tidx;
   end if;
   if not p_unassigned and not v_cancel then
     v_crew := pg_temp.pick_crew(p_day, p_s, v_end, p_crew, seq);
@@ -112,7 +112,8 @@ begin
   v_quote := round(case p_kind when 'house_move' then 300 + p_hrs * 95 + (seq % 5) * 20
                                when 'piano' then 260 + (seq % 3) * 60
                                when 'commercial' then 900 + p_hrs * 110
-                               else 110 + p_hrs * 45 end);
+                               else 110 + v_beds * 35 + v_baths * 25
+                                    + case v_clean when 'deep' then 60 when 'end_of_tenancy' then 90 else 0 end end);
   v_notes := case p_kind when 'cleaning' then 'Keys with property manager.'
                          when 'piano' then 'Upright piano, two flights of stairs.' else null end;
 

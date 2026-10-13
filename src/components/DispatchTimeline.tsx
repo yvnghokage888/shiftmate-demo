@@ -134,7 +134,7 @@ export function DispatchTimeline({
           ))}
           {offline && (
             <div className="absolute inset-0 grid place-items-center text-[11px] text-muted-foreground">
-              In for service
+              In for maintenance
             </div>
           )}
           {showNow && <div className="absolute inset-y-0 z-10 w-px bg-red-500" style={{ left: pct(nowMin!) }} />}
@@ -224,7 +224,7 @@ export function DispatchTimeline({
               sub: [t.type, t.registration].filter(Boolean).join(" · "),
               color: t.color,
               list: jobs.filter((j) => j.truck_id === t.id),
-              offline: t.status === "service",
+              offline: t.status === "maintenance",
             }),
           )}
         </div>

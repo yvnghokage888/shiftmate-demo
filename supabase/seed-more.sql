@@ -33,24 +33,24 @@ from (values
 ) as v(n, name, email, grp, minh);
 
 insert into public.trucks (id, name, registration, type, status, notes, color, wof_expiry, rego_expiry) values
-  ('c0000000-0000-0000-0000-000000000004', 'Truck 3', 'DEMO04', '8-tonne', 'available', 'Tail lift, long wheelbase', '#7c3aed', current_date + 300, current_date + 250),
-  ('c0000000-0000-0000-0000-000000000005', 'Truck 4', 'DEMO05', '4-tonne', 'available', null,                       '#db2777', current_date + 45,  current_date + 160),
-  ('c0000000-0000-0000-0000-000000000006', 'Truck 5', 'DEMO06', '6-tonne', 'available', 'Piano trolley fitted',     '#0891b2', current_date + 12,  current_date + 70),
-  ('c0000000-0000-0000-0000-000000000007', 'Van 2',   'DEMO07', 'van',     'available', null,                       '#65a30d', current_date + 200, current_date + 30);
+  ('c0000000-0000-0000-0000-000000000004', 'Truck 3', 'DEMO04', '8-tonne', 'active', 'Tail lift, long wheelbase', '#7c3aed', current_date + 300, current_date + 250),
+  ('c0000000-0000-0000-0000-000000000005', 'Truck 4', 'DEMO05', '4-tonne', 'active', null,                       '#db2777', current_date + 45,  current_date + 160),
+  ('c0000000-0000-0000-0000-000000000006', 'Truck 5', 'DEMO06', '6-tonne', 'active', 'Piano trolley fitted',     '#0891b2', current_date + 12,  current_date + 70),
+  ('c0000000-0000-0000-0000-000000000007', 'Van 2',   'DEMO07', 'van',     'active', null,                       '#65a30d', current_date + 200, current_date + 30);
 
 insert into public.truck_logs (truck_id, log_date, type, detail, cost) values
   ('c0000000-0000-0000-0000-000000000001', current_date - 60, 'fuel',    'Diesel',                        152.30),
   ('c0000000-0000-0000-0000-000000000001', current_date - 33, 'fuel',    'Diesel',                        147.90),
   ('c0000000-0000-0000-0000-000000000001', current_date - 12, 'repair',  'Replace tail-lift hose',        260.00),
-  ('c0000000-0000-0000-0000-000000000002', current_date - 48, 'service', 'Oil and filter',                310.00),
+  ('c0000000-0000-0000-0000-000000000002', current_date - 48, 'maintenance', 'Oil and filter',                310.00),
   ('c0000000-0000-0000-0000-000000000002', current_date - 25, 'fuel',    'Diesel',                        133.20),
-  ('c0000000-0000-0000-0000-000000000004', current_date - 40, 'service', '10,000 km service',             545.00),
+  ('c0000000-0000-0000-0000-000000000004', current_date - 40, 'maintenance', '10,000 km service',             545.00),
   ('c0000000-0000-0000-0000-000000000004', current_date - 14, 'fuel',    'Diesel',                        171.60),
   ('c0000000-0000-0000-0000-000000000005', current_date - 30, 'repair',  'Replace rear tyres',            720.00),
   ('c0000000-0000-0000-0000-000000000005', current_date - 7,  'fuel',    'Diesel',                        129.40),
-  ('c0000000-0000-0000-0000-000000000006', current_date - 55, 'service', 'Brake service',                 480.00),
+  ('c0000000-0000-0000-0000-000000000006', current_date - 55, 'maintenance', 'Brake service',                 480.00),
   ('c0000000-0000-0000-0000-000000000006', current_date - 3,  'fuel',    'Diesel',                        155.00),
-  ('c0000000-0000-0000-0000-000000000007', current_date - 19, 'service', 'Routine service',               295.00),
+  ('c0000000-0000-0000-0000-000000000007', current_date - 19, 'maintenance', 'Routine service',               295.00),
   ('c0000000-0000-0000-0000-000000000003', current_date - 40, 'fuel',    'Petrol',                         96.80);
 
 insert into public.staff_recurring_unavailable (staff_id, weekday, reason)

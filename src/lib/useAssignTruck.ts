@@ -1,5 +1,5 @@
 // Shared "book this job on that truck" action used by the Dispatch board and the
-// timeline. Refuses a truck that is in for service and asks before double-booking
+// timeline. Refuses a truck that is in for maintenance and asks before double-booking
 // a truck at an overlapping time.
 import { toast } from "sonner";
 import { useSetJobTruck } from "@/lib/mutations";
@@ -13,8 +13,8 @@ export function useAssignTruck(trucks: Truck[], dayJobs: Job[]) {
   return function assign(job: Job, truckId: string | null) {
     if (job.truck_id === truckId) return;
     const target = truckId ? trucks.find((t) => t.id === truckId) : null;
-    if (target?.status === "service") {
-      toast(`${target.name} is in for service`);
+    if (target?.status === "maintenance") {
+      toast(`${target.name} is in for maintenance`);
       return;
     }
     if (truckId) {

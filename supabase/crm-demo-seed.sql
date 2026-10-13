@@ -30,7 +30,7 @@ crew as (
   select id, row_number() over (order by name) as n from public.staff where not is_manager
 ),
 trucks_n as (
-  select id, row_number() over (order by name) as n from public.trucks where status <> 'service'
+  select id, row_number() over (order by name) as n from public.trucks where status <> 'maintenance'
 ),
 base as (
   select n.i, n.name,
@@ -103,7 +103,7 @@ begin
     where a.status <> 'cancelled' and b.status <> 'cancelled'
   loop
     select t.id into new_truck from public.trucks t
-     where t.status <> 'service' and not exists (
+     where t.status <> 'maintenance' and not exists (
        select 1 from public.jobs o, public.jobs me
         where me.id = r.id and o.id <> me.id and o.truck_id = t.id and o.job_date = me.job_date
           and o.status <> 'cancelled'

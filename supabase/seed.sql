@@ -29,12 +29,12 @@ insert into public.access_grants (subject_type, subject_id, resource, can_read, 
   ('team', 'a0000000-0000-0000-0000-000000000003', 'timesheets', true, false);
 
 insert into public.trucks (id, name, registration, type, status, notes, color, wof_expiry, rego_expiry) values
-  ('c0000000-0000-0000-0000-000000000001', 'Truck 1', 'DEMO01', '6-tonne', 'available', 'Tail lift', '#2563eb', current_date + 120, current_date + 200),
-  ('c0000000-0000-0000-0000-000000000002', 'Truck 2', 'DEMO02', '4-tonne', 'available', null,        '#16a34a', current_date + 20,  current_date + 90),
-  ('c0000000-0000-0000-0000-000000000003', 'Van 1',   'DEMO03', 'van',     'service',   'In for brakes', '#d97706', current_date - 5, current_date + 40);
+  ('c0000000-0000-0000-0000-000000000001', 'Truck 1', 'DEMO01', '6-tonne', 'active', 'Tail lift', '#2563eb', current_date + 120, current_date + 200),
+  ('c0000000-0000-0000-0000-000000000002', 'Truck 2', 'DEMO02', '4-tonne', 'active', null,        '#16a34a', current_date + 20,  current_date + 90),
+  ('c0000000-0000-0000-0000-000000000003', 'Van 1',   'DEMO03', 'van',     'maintenance',   'In for brakes', '#d97706', current_date - 5, current_date + 40);
 
 insert into public.truck_logs (truck_id, log_date, type, detail, cost) values
-  ('c0000000-0000-0000-0000-000000000001', current_date - 21, 'service', 'Routine service',              420.00),
+  ('c0000000-0000-0000-0000-000000000001', current_date - 21, 'maintenance', 'Routine service',              420.00),
   ('c0000000-0000-0000-0000-000000000002', current_date - 9,  'fuel',    'Diesel',                       138.50),
   ('c0000000-0000-0000-0000-000000000003', current_date - 2,  'repair',  'Brake pads and discs',         610.00);
 

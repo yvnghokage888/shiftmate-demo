@@ -7,7 +7,7 @@ import { useJobs, usePermissions, useStaff } from "@/lib/queries";
 import { useSetJobStatus } from "@/lib/mutations";
 import { fmtTimeShort, nzToday } from "@/lib/dates";
 import { friendlyError } from "@/lib/format";
-import { CLEAN_LABEL, STATUS_CLS, STATUS_LABEL, fmtDay, money } from "@/lib/jobsUi";
+import { CLEAN_LABEL, STATUS_CLS, STATUS_LABEL, addDaysStr, fmtDay, money } from "@/lib/jobsUi";
 import { Button } from "@/components/ui/button";
 import { JobModal } from "@/components/JobModal";
 import type { Job, JobStatus } from "@/lib/types";
@@ -32,11 +32,7 @@ export function Cleaning() {
   const done = all.filter((j) => j.status === "completed" || j.job_date < today);
   const shown = (tab === "upcoming" ? upcoming : tab === "done" ? done.slice().reverse() : all);
 
-  const weekAhead = upcoming.filter((j) => {
-    const d = new Date(today + "T12:00");
-    d.setDate(d.getDate() + 7);
-    return j.job_date <= d.toISOString().slice(0, 10);
-  }).length;
+  const weekAhead = upcoming.filter((j) => j.job_date <= addDaysStr(today, 7)).length;
   const noCleaner = upcoming.filter((j) => j.crew_ids.length === 0).length;
 
   const tabs: [Tab, string, number][] = [

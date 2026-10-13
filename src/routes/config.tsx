@@ -104,7 +104,7 @@ function Overview() {
           <div className="flex items-center justify-between gap-4">
             <div>
               <CardTitle className="text-2xl">{me.data.name}</CardTitle>
-              <CardDescription>Authenticated against the dev database</CardDescription>
+              <CardDescription>{isManager ? "Manager overview" : "Crew overview"}</CardDescription>
             </div>
             <Badge variant={isManager ? "default" : "secondary"}>
               {isManager ? "Manager" : "Crew"}
@@ -139,10 +139,6 @@ function Overview() {
           </div>
         </CardContent>
       </Card>
-      <p className="text-sm text-muted-foreground">
-        Foundation verified: router + React Query + realtime invalidation + gated
-        nav. Next: port the crew screens into these routes.
-      </p>
     </div>
   );
 }

@@ -8,7 +8,7 @@ import { useJobs, usePermissions, useStaff, useTrucks } from "@/lib/queries";
 import { useSetJobStatus } from "@/lib/mutations";
 import { TZ, ds, fmtTimeShort, gwk, nzToday } from "@/lib/dates";
 import { friendlyError } from "@/lib/format";
-import { SERVICE_LABEL, STATUS_CLS, STATUS_LABEL, clashFor, fmtDay, money } from "@/lib/jobsUi";
+import { SERVICE_LABEL, STATUS_CLS, STATUS_LABEL, addDaysStr, clashFor, fmtDay, money } from "@/lib/jobsUi";
 import { Button } from "@/components/ui/button";
 import { JobModal } from "@/components/JobModal";
 import { DispatchTimeline } from "@/components/DispatchTimeline";
@@ -33,11 +33,7 @@ export function Dispatch() {
   const dates = gwk(offset);
   const days = dates.map((d) => ds(d));
   const today = nzToday();
-  const selectedDay = (() => {
-    const d = new Date(today + "T12:00");
-    d.setDate(d.getDate() + dayOffset);
-    return d.toISOString().slice(0, 10);
-  })();
+  const selectedDay = addDaysStr(today, dayOffset);
   const staffName = new Map(staff.map((s) => [s.id, s.name]));
   const truckById = new Map(trucks.map((t) => [t.id, t]));
 
@@ -62,7 +58,7 @@ export function Dispatch() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold">Dispatch</h1>
-          <p className="text-sm text-muted-foreground">Scheduled jobs, trucks and crew for the week.</p>
+          <p className="text-sm text-muted-foreground">Scheduled jobs, trucks and crew.</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex overflow-hidden rounded-md border text-xs">

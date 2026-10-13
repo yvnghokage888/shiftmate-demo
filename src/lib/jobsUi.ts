@@ -1,7 +1,6 @@
 // Labels, colours and small pure helpers shared by the Dispatch, Cleaning and
 // Invoices screens.
 import type { CleaningType, InvoiceStatus, Job, JobStatus, ServiceType } from "./types";
-import { TZ } from "./dates";
 
 export const SERVICE_LABEL: Record<ServiceType, string> = {
   house_move: "House move",
@@ -46,12 +45,19 @@ export function money(n: number | null | undefined): string {
 
 /** "Tue 14 Oct" from a YYYY-MM-DD string. */
 export function fmtDay(dateStr: string): string {
-  return new Date(dateStr + "T12:00").toLocaleDateString("en-NZ", {
+  // Midnight UTC formatted in UTC, so the calendar day never shifts with the viewer's timezone.
+  return new Date(dateStr + "T00:00:00Z").toLocaleDateString("en-NZ", {
     weekday: "short",
     day: "numeric",
     month: "short",
-    timeZone: TZ,
+    timeZone: "UTC",
   });
+}
+
+/** YYYY-MM-DD plus n days, by calendar arithmetic (timezone independent). */
+export function addDaysStr(dateStr: string, n: number): string {
+  const [y, m, d] = dateStr.split("-").map(Number);
+  return new Date(Date.UTC(y, m - 1, d + n)).toISOString().slice(0, 10);
 }
 
 function toMin(t: string | null): number | null {
